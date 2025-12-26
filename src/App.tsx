@@ -17,7 +17,7 @@ import * as random from 'maath/random';
 import { GestureRecognizer, FilesetResolver, DrawingUtils } from "@mediapipe/tasks-vision";
 
 // --- 动态生成照片列表 (top.jpg + 1.jpg 到 31.jpg) ---
-const TOTAL_NUMBERED_PHOTOS = 31;
+const TOTAL_NUMBERED_PHOTOS = 41;
 // 修改：将 top.jpg 加入到数组开头
 const bodyPhotoPaths = [
   '/photos/top.jpg',
@@ -478,12 +478,12 @@ const GestureController = ({ onGesture, onMove, onStatus, debugMode }: any) => {
 
             if (results.gestures.length > 0) {
               const name = results.gestures[0][0].categoryName; const score = results.gestures[0][0].score;
-              if (score > 0.4) {
+              if (score > 0.5) {
                  if (name === "Open_Palm") onGesture("CHAOS"); if (name === "Closed_Fist") onGesture("FORMED");
                  if (debugMode) onStatus(`DETECTED: ${name}`);
               }
               if (results.landmarks.length > 0) {
-                const speed = (0.5 - results.landmarks[0][0].x) * 0.15;
+                const speed = (0.5 - results.landmarks[0][0].x) * 0.3;
                 onMove(Math.abs(speed) > 0.01 ? speed : 0);
               }
             } else { onMove(0); if (debugMode) onStatus("AI READY: NO HAND"); }
@@ -535,14 +535,56 @@ export default function GrandTreeApp() {
         </div>
       </div>
 
-      {/* UI - Buttons */}
-      <div style={{ position: 'absolute', bottom: '30px', right: '40px', zIndex: 10, display: 'flex', gap: '10px' }}>
-        <button onClick={() => setDebugMode(!debugMode)} style={{ padding: '12px 15px', backgroundColor: debugMode ? '#FFD700' : 'rgba(0,0,0,0.5)', border: '1px solid #FFD700', color: debugMode ? '#000' : '#FFD700', fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', backdropFilter: 'blur(4px)' }}>
-           {debugMode ? 'HIDE DEBUG' : '🛠 DEBUG'}
-        </button>
-        <button onClick={() => setSceneState(s => s === 'CHAOS' ? 'FORMED' : 'CHAOS')} style={{ padding: '12px 30px', backgroundColor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255, 215, 0, 0.5)', color: '#FFD700', fontFamily: 'serif', fontSize: '14px', fontWeight: 'bold', letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', backdropFilter: 'blur(4px)' }}>
-           {sceneState === 'CHAOS' ? 'Assemble Tree' : 'Disperse'}
-        </button>
+    
+
+      <div style={{ position: 'absolute', bottom: '30px', right: '40px', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+  
+        {/* 第一行：两个图片 */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <img 
+            src="/joke-bear-small.gif" 
+            alt="joke-bear" 
+            style={{ 
+              height: '100px',
+              width: 'auto',
+              backgroundColor: 'rgba(0,0,0,0.5)', 
+              border: '1px solid rgba(255, 215, 0, 0.5)', 
+              borderRadius: '8px',
+              backdropFilter: 'blur(4px)', 
+              objectFit: 'cover',
+              cursor: 'pointer' 
+            }}
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+      
+          <img 
+            src="/nailoong.gif" 
+            alt="nailoong" 
+            style={{ 
+              height: '100px',
+              width: 'auto', 
+              backgroundColor: 'rgba(0,0,0,0.5)', 
+              border: '1px solid rgba(255, 215, 0, 0.5)', 
+              borderRadius: '8px',
+              backdropFilter: 'blur(4px)', 
+              objectFit: 'cover',
+              cursor: 'pointer' 
+            }}
+          />
+        </div>
+
+        {/* 第二行：两个按钮 */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => setDebugMode(!debugMode)} style={{ padding: '12px 15px', backgroundColor: debugMode ? '#FFD700' : 'rgba(0,0,0,0.5)', border: '1px solid #FFD700', color: debugMode ? '#000' : '#FFD700', fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', backdropFilter: 'blur(4px)' }}>
+            {debugMode ? 'HIDE DEBUG' : '🛠 DEBUG'}
+          </button>
+          <button onClick={() => setSceneState(s => s === 'CHAOS' ? 'FORMED' : 'CHAOS')} style={{ padding: '12px 30px', backgroundColor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255, 215, 0, 0.5)', color: '#FFD700', fontFamily: 'serif', fontSize: '14px', fontWeight: 'bold', letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer', backdropFilter: 'blur(4px)' }}>
+            {sceneState === 'CHAOS' ? 'Assemble Tree' : 'Disperse'}
+          </button>
+        </div>
+
       </div>
 
       {/* UI - AI Status */}
